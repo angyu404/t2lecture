@@ -1,0 +1,121 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>t2lecture</title>
+    <style>
+        body {
+            font-family: Arial;
+            max-width: 900px;
+            margin: 40px auto;
+        }
+
+        h1 {
+            margin-bottom: 12px;
+        }
+
+        .card {
+            border: 1px solid #ddd;
+            padding: 16px;
+            border-radius: 12px;
+        }
+
+        button {
+            padding: 10px 14px;
+            cursor: pointer;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        #output {
+            white-space: pre-wrap;
+            border: 1px solid #eee;
+            padding: 12px;
+            border-radius: 12px;
+            min-height: 180px;
+
+            /* ✅ 升級 2：固定高度 + 可捲動 */
+            max-height: 500px;
+            overflow: auto;
+        }
+
+        .small {
+            color: #666;
+            font-size: 14px;
+            margin-top: 8px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Let’s start learning</h1>
+
+    <div class="card">
+        <input type="file" id="fileInput" accept="video/*" />
+        <button id="uploadBtn">Enter</button>
+        <p id="status" class="small"></p>
+    </div>
+
+    <h2>Transcript</h2>
+    <div id="output"></div>
+
+    <script>
+        const uploadBtn = document.getElementById("uploadBtn");
+        const fileInput = document.getElementById("fileInput");
+        const statusEl = document.getElementById("status");
+        const outputEl = document.getElementById("output");
+
+        // ✅ 你之後如果部署後端到雲端，只要把這行改成雲端網址
+        const API_BASE = "http://127.0.0.1:8001";
+
+        uploadBtn.addEventListener("click", async () => {
+            const file = fileInput.files[0];
+            if (!file) {
+                alert("Please choose a video file.");
+                return;
+            }
+
+            // ✅ 升級 1：處理中 + 禁用按鈕
+            uploadBtn.disabled = true;
+            statusEl.textContent = "Uploading & transcribing... please wait";
+            outputEl.textContent = "";
+
+            const formData = new FormData();
+            formData.append("file", file);
+
+            try {
+                const res = await fetch(`${API_BASE}/upload`, {
+                    method: "POST",
+                    body: formData
+                });
+
+                const data = await res.json();
+
+                if (data.error) {
+                    statusEl.textContent = "Error: " + data.error;
+                    return;
+                }
+
+                statusEl.textContent = `Done. language=${data.language}`;
+                outputEl.textContent = data.text || "(empty)";
+
+                // ✅（可選）你未來要用時間戳 segments 做投影片
+                // console.log(data.segments);
+
+            } catch (e) {
+                statusEl.textContent = "Failed to reach backend. Is it running?";
+                outputEl.textContent = String(e);
+            } finally {
+                uploadBtn.disabled = false;
+            }
+        });
+    </script>
+</body>
+
+</html>
