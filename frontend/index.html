@@ -1,118 +1,163 @@
 <!doctype html>
 <html>
-
 <head>
-    <meta charset="utf-8" />
-    <title>t2lecture</title>
-    <style>
-        body {
-            font-family: Arial;
-            max-width: 900px;
-            margin: 40px auto;
-        }
+  <meta charset="utf-8" />
+  <title>t2lecture</title>
+  <style>
+    body { font-family: Arial; max-width: 980px; margin: 40px auto; }
+    h1 { margin-bottom: 12px; }
+    .row { display: grid; grid-template-columns: 1fr; gap: 16px; }
+    @media (min-width: 900px) { .row { grid-template-columns: 1fr 1fr; } }
 
-        h1 {
-            margin-bottom: 12px;
-        }
+    .card { border: 1px solid #ddd; padding: 16px; border-radius: 12px; }
+    button { padding: 10px 14px; cursor: pointer; border-radius: 10px; border: 1px solid #ccc; }
+    button:disabled { opacity: 0.6; cursor: not-allowed; }
 
-        .card {
-            border: 1px solid #ddd;
-            padding: 16px;
-            border-radius: 12px;
-        }
+    #output, #rawOutput, #warnings {
+      white-space: pre-wrap;
+      border: 1px solid #eee;
+      padding: 12px;
+      border-radius: 12px;
+      min-height: 180px;
+      max-height: 500px;
+      overflow: auto;
+      background: #fff;
+    }
+    #warnings { min-height: 60px; }
 
-        button {
-            padding: 10px 14px;
-            cursor: pointer;
-            border-radius: 10px;
-            border: 1px solid #ccc;
-        }
-
-        button:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
-        #output {
-            white-space: pre-wrap;
-            border: 1px solid #eee;
-            padding: 12px;
-            border-radius: 12px;
-            min-height: 180px;
-
-            max-height: 500px;
-            overflow: auto;
-        }
-
-        .small {
-            color: #666;
-            font-size: 14px;
-            margin-top: 8px;
-        }
-    </style>
+    .small { color: #666; font-size: 14px; margin-top: 8px; }
+    label { display: inline-flex; gap: 8px; align-items: center; }
+    .muted { color: #777; }
+    .pill { display: inline-block; padding: 4px 10px; border: 1px solid #ddd; border-radius: 999px; font-size: 12px; }
+  </style>
 </head>
 
 <body>
-    <h1>Let’s start learning</h1>
+  <h1>Let’s start learning</h1>
 
-    <div class="card">
-        <input type="file" id="fileInput" accept="video/*" />
-        <button id="uploadBtn">Enter</button>
-        <p id="status" class="small"></p>
+  <div class="card">
+    <input type="file" id="fileInput" accept="video/*" />
+    <div style="margin-top: 12px; display:flex; gap: 14px; align-items:center; flex-wrap: wrap;">
+      <button id="uploadBtn">Enter</button>
+
+      <label class="muted">
+        <input type="checkbox" id="polishChk" checked />
+        Polish transcript (Gemini)
+      </label>
+
+      <span class="pill" id="apiLabel"></span>
     </div>
 
-    <h2>Transcript</h2>
-    <div id="output"></div>
+    <p id="status" class="small"></p>
+  </div>
 
-    <script>
-        const uploadBtn = document.getElementById("uploadBtn");
-        const fileInput = document.getElementById("fileInput");
-        const statusEl = document.getElementById("status");
-        const outputEl = document.getElementById("output");
+  <div class="row" style="margin-top: 18px;">
+    <div>
+      <h2>Transcript</h2>
+      <div id="output"></div>
+    </div>
 
-        const API_BASE = "https://t2lecture-backend.onrender.com";
+    <div>
+      <h2>Warnings</h2>
+      <div id="warnings"></div>
 
-        uploadBtn.addEventListener("click", async () => {
-            const file = fileInput.files[0];
-            if (!file) {
-                alert("Please choose a video file.");
-                return;
-            }
+      <div style="margin-top: 14px;">
+        <label class="muted">
+          <input type="checkbox" id="showRawChk" />
+          Show raw transcript (debug)
+        </label>
+      </div>
 
-            uploadBtn.disabled = true;
-            statusEl.textContent = "Uploading & transcribing... please wait";
-            outputEl.textContent = "";
+      <div id="rawWrap" style="display:none; margin-top: 10px;">
+        <h3 style="margin: 8px 0;">Raw transcript</h3>
+        <div id="rawOutput"></div>
+      </div>
+    </div>
+  </div>
 
-            const formData = new FormData();
-            formData.append("file", file);
+  <script>
+    const uploadBtn = document.getElementById("uploadBtn");
+    const fileInput = document.getElementById("fileInput");
+    const statusEl = document.getElementById("status");
+    const outputEl = document.getElementById("output");
+    const warningsEl = document.getElementById("warnings");
+    const polishChk = document.getElementById("polishChk");
+    const showRawChk = document.getElementById("showRawChk");
+    const rawWrap = document.getElementById("rawWrap");
+    const rawOutputEl = document.getElementById("rawOutput");
+    const apiLabel = document.getElementById("apiLabel");
 
-            try {
-                const res = await fetch(`${API_BASE}/upload`, {
-                    method: "POST",
-                    body: formData
-                });
+    // ✅ Use local backend automatically when you're running locally.
+    // If deployed, it will use your Render URL.
+    const API_BASE = (location.hostname === "localhost" || location.hostname === "127.0.0.1")
+      ? "http://127.0.0.1:8000"
+      : "https://t2lecture-backend.onrender.com";
 
-                const data = await res.json();
+    apiLabel.textContent = `API: ${API_BASE}`;
 
-                if (data.error) {
-                    statusEl.textContent = "Error: " + data.error;
-                    return;
-                }
+    showRawChk.addEventListener("change", () => {
+      rawWrap.style.display = showRawChk.checked ? "block" : "none";
+    });
 
-                statusEl.textContent = `Done. language=${data.language}`;
-                outputEl.textContent = data.text || "(empty)";
+    function prettyWarnings(data) {
+      const p = data?.polish;
+      if (!p) return "";
+      if (p.error) return "Polish error: " + p.error;
+      const warnings = Array.isArray(p.warnings) ? p.warnings : [];
+      if (warnings.length === 0) return "(No warnings)";
+      return warnings.map((w, i) => `${i + 1}. ${w}`).join("\n");
+    }
 
+    uploadBtn.addEventListener("click", async () => {
+      const file = fileInput.files[0];
+      if (!file) {
+        alert("Please choose a video file.");
+        return;
+      }
 
-            } catch (e) {
-                statusEl.textContent = "Failed to reach backend. Is it running?";
-                outputEl.textContent = String(e);
-            } finally {
-                uploadBtn.disabled = false;
-            }
-        });
-    </script>
+      uploadBtn.disabled = true;
+      statusEl.textContent = "Uploading & processing... please wait";
+      outputEl.textContent = "";
+      warningsEl.textContent = "";
+      rawOutputEl.textContent = "";
+
+      const formData = new FormData();
+      formData.append("file", file);
+
+      // ✅ IMPORTANT: pass polish as a query param
+      const url = `${API_BASE}/upload?polish=${polishChk.checked ? "true" : "false"}`;
+
+      try {
+        const res = await fetch(url, { method: "POST", body: formData });
+
+        // If backend returns non-JSON error, handle gracefully
+        const text = await res.text();
+        let data = null;
+        try { data = JSON.parse(text); } catch { /* not JSON */ }
+
+        if (!res.ok) {
+          statusEl.textContent = `Error (${res.status}): ${res.statusText}`;
+          outputEl.textContent = data ? JSON.stringify(data, null, 2) : text;
+          return;
+        }
+
+        if (data?.error) {
+          statusEl.textContent = "Error: " + data.error;
+          outputEl.textContent = JSON.stringify(data, null, 2);
+          return;
+        }
+
+        statusEl.textContent = `Done. language=${data.language || "?"}  polish=${polishChk.checked}`;
+        outputEl.textContent = data.text || "(empty)";
+        warningsEl.textContent = prettyWarnings(data);
+        rawOutputEl.textContent = data.raw_text || "";
+      } catch (e) {
+        statusEl.textContent = "Failed to reach backend. Is it running?";
+        outputEl.textContent = String(e);
+      } finally {
+        uploadBtn.disabled = false;
+      }
+    });
+  </script>
 </body>
-
 </html>
-
-<h1>Test Push Working</h1>
