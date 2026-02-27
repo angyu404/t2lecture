@@ -1,4 +1,3 @@
-print("RUNNING FILE:", __file__)
 from fastapi import FastAPI, UploadFile, File, Query
 from fastapi.middleware.cors import CORSMiddleware
 from faster_whisper import WhisperModel
@@ -10,13 +9,14 @@ import json
 
 from google import genai
 
+print("RUNNING FILE:", __file__)
 
 app = FastAPI()
 
 # Dev: allow all origins (lock down for prod)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["*"],  # for dev; restrict in production
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -32,8 +32,8 @@ AUDIO_DIR.mkdir(exist_ok=True)
 model = WhisperModel("tiny", device="cpu", compute_type="int8")
 
 # Gemini client
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-gemini_client = genai.Client(api_key=GEMINI_API_KEY) if GEMINI_API_KEY else None
+GEMINI_API_KEY = "AIzaSyCAF7unhPwVy_SpDHnH5PFD9M1zz30dHAQ"
+gemini_client = genai.Client(api_key=GEMINI_API_KEY)
 GEMINI_MODEL = "gemini-2.5-flash"
 
 
@@ -47,6 +47,7 @@ def extract_audio_to_wav(video_path: Path, wav_path: Path):
         "-f", "wav",
         str(wav_path),
     ]
+    # If ffmpeg isn't on PATH, Windows throws FileNotFoundError (WinError 2)
     subprocess.run(cmd, check=True)
 
 
@@ -78,9 +79,9 @@ def polish_transcript_with_gemini(raw_text: str, language_hint: str | None = Non
     prompt = (
         f"{rules}\n"
         "Return ONLY valid JSON with keys:\n"
-        '  polished: string\n'
-        '  changes_summary: array of short strings\n'
-        '  warnings: array of short strings\n\n'
+        "  polished: string\n"
+        "  changes_summary: array of short strings\n"
+        "  warnings: array of short strings\n\n"
         f"RAW TRANSCRIPT:\n{raw_text}\n"
     )
 
@@ -96,10 +97,19 @@ def polish_transcript_with_gemini(raw_text: str, language_hint: str | None = Non
     return data
 
 
+@app.get("/")
+def root():
+    return {"message": "t2lecture backend running. Visit /docs or /health."}
+
+
 @app.get("/health")
 def health():
     return {"ok": True}
 
+@app.get("/debug-key")
+def debug_key():
+    k = os.getenv("GEMINI_API_KEY") or ""
+    return {"has_key": bool(k), "key_prefix": k[:6], "key_len": len(k)}
 
 @app.post("/upload")
 async def upload(
@@ -117,8 +127,12 @@ async def upload(
 
     try:
         extract_audio_to_wav(video_path, wav_path)
+    except FileNotFoundError:
+        return {
+            "error": "ffmpeg not found. Install ffmpeg and ensure it is on PATH, then restart the backend."
+        }
     except subprocess.CalledProcessError:
-        return {"error": "ffmpeg failed. Please confirm ffmpeg is installed."}
+        return {"error": "ffmpeg failed while extracting audio."}
 
     segments, info = model.transcribe(str(wav_path), vad_filter=True)
 
@@ -141,10 +155,12 @@ async def upload(
 
     if polish and raw_text.strip():
         try:
-            polish_meta = polish_transcript_with_gemini(raw_text, language_hint=getattr(info, "language", None))
+            polish_meta = polish_transcript_with_gemini(
+                raw_text,
+                language_hint=getattr(info, "language", None)
+            )
             final_text = polish_meta.get("polished", raw_text)
         except Exception as e:
-            # fail-soft
             polish_meta = {"error": str(e)}
             final_text = raw_text
 
