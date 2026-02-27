@@ -40,7 +40,6 @@
             border-radius: 12px;
             min-height: 180px;
 
-            /* ✅ 升級 2：固定高度 + 可捲動 */
             max-height: 500px;
             overflow: auto;
         }
@@ -71,7 +70,6 @@
         const statusEl = document.getElementById("status");
         const outputEl = document.getElementById("output");
 
-        // ✅ 你之後如果部署後端到雲端，只要把這行改成雲端網址
         const API_BASE = "https://t2lecture-backend.onrender.com";
 
         uploadBtn.addEventListener("click", async () => {
@@ -105,8 +103,6 @@
                 statusEl.textContent = `Done. language=${data.language}`;
                 outputEl.textContent = data.text || "(empty)";
 
-                // ✅（可選）你未來要用時間戳 segments 做投影片
-                // console.log(data.segments);
 
             } catch (e) {
                 statusEl.textContent = "Failed to reach backend. Is it running?";
