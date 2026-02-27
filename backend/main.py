@@ -90,7 +90,6 @@ def polish_transcript_with_gemini(raw_text: str, language_hint: str | None = Non
         config={"response_mime_type": "application/json"},
     )
 
-    # Defensive parsing
     data = json.loads(resp.text)
     if "polished" not in data:
         raise RuntimeError("Gemini response missing 'polished' field.")
