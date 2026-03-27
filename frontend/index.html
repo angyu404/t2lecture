@@ -1,19 +1,53 @@
 <!doctype html>
 <html>
+
 <head>
   <meta charset="utf-8" />
   <title>t2lecture</title>
   <style>
-    body { font-family: Arial; max-width: 980px; margin: 40px auto; }
-    h1 { margin-bottom: 12px; }
-    .row { display: grid; grid-template-columns: 1fr; gap: 16px; }
-    @media (min-width: 900px) { .row { grid-template-columns: 1fr 1fr; } }
+    body {
+      font-family: Arial;
+      max-width: 980px;
+      margin: 40px auto;
+    }
 
-    .card { border: 1px solid #ddd; padding: 16px; border-radius: 12px; }
-    button { padding: 10px 14px; cursor: pointer; border-radius: 10px; border: 1px solid #ccc; }
-    button:disabled { opacity: 0.6; cursor: not-allowed; }
+    h1 {
+      margin-bottom: 12px;
+    }
 
-    #output, #rawOutput, #warnings {
+    .row {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    @media (min-width: 900px) {
+      .row {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .card {
+      border: 1px solid #ddd;
+      padding: 16px;
+      border-radius: 12px;
+    }
+
+    button {
+      padding: 10px 14px;
+      cursor: pointer;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    #output,
+    #rawOutput,
+    #warnings {
       white-space: pre-wrap;
       border: 1px solid #eee;
       padding: 12px;
@@ -23,12 +57,34 @@
       overflow: auto;
       background: #fff;
     }
-    #warnings { min-height: 60px; }
 
-    .small { color: #666; font-size: 14px; margin-top: 8px; }
-    label { display: inline-flex; gap: 8px; align-items: center; }
-    .muted { color: #777; }
-    .pill { display: inline-block; padding: 4px 10px; border: 1px solid #ddd; border-radius: 999px; font-size: 12px; }
+    #warnings {
+      min-height: 60px;
+    }
+
+    .small {
+      color: #666;
+      font-size: 14px;
+      margin-top: 8px;
+    }
+
+    label {
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .muted {
+      color: #777;
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 4px 10px;
+      border: 1px solid #ddd;
+      border-radius: 999px;
+      font-size: 12px;
+    }
   </style>
 </head>
 
@@ -160,4 +216,5 @@
     });
   </script>
 </body>
+
 </html>
