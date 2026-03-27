@@ -1,138 +1,685 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 
 <head>
-  <meta charset="utf-8" />
-  <title>t2lecture</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lectra</title>
   <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --navy: #102542;
+      --blue: #1f6feb;
+      --light-blue: #dbeafe;
+      --gold: #fbbf24;
+      --cream: #f8fafc;
+      --white: rgba(255, 255, 255, 0.88);
+      --text: #0f172a;
+      --muted: #475569;
+      --border: rgba(255, 255, 255, 0.25);
+      --shadow: 0 20px 45px rgba(15, 23, 42, 0.18);
+    }
+
     body {
-      font-family: Arial;
-      max-width: 980px;
-      margin: 40px auto;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        linear-gradient(rgba(10, 20, 40, 0.55), rgba(10, 20, 40, 0.6)),
+        url("https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1600&q=80") center/cover no-repeat fixed;
+      overflow-x: hidden;
     }
 
-    h1 {
-      margin-bottom: 12px;
+    .overlay-pattern {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 15% 20%, rgba(255, 255, 255, 0.08), transparent 18%),
+        radial-gradient(circle at 85% 30%, rgba(255, 255, 255, 0.06), transparent 16%),
+        radial-gradient(circle at 50% 85%, rgba(251, 191, 36, 0.08), transparent 18%);
+      z-index: 0;
     }
 
-    .row {
+    .page {
+      position: relative;
+      z-index: 1;
+      max-width: 1220px;
+      margin: 0 auto;
+      padding: 36px 20px 60px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-logo {
+      width: 60px;
+      height: 60px;
+      border-radius: 18px;
       display: grid;
-      grid-template-columns: 1fr;
-      gap: 16px;
+      place-items: center;
+      background: linear-gradient(135deg, #2563eb, #1e40af);
+      color: white;
+      font-size: 28px;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(255, 255, 255, 0.25);
     }
 
-    @media (min-width: 900px) {
-      .row {
-        grid-template-columns: 1fr 1fr;
-      }
+    .brand-text h1 {
+      font-size: 34px;
+      line-height: 1;
+      color: white;
+      letter-spacing: 0.5px;
     }
 
-    .card {
-      border: 1px solid #ddd;
-      padding: 16px;
-      border-radius: 12px;
+    .brand-text p {
+      margin-top: 6px;
+      color: rgba(255, 255, 255, 0.85);
+      font-size: 15px;
     }
 
-    button {
+    .api-pill {
+      padding: 10px 16px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.14);
+      color: white;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      font-size: 13px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 24px;
+      margin-bottom: 26px;
+    }
+
+    .hero-card,
+    .upload-card,
+    .panel-card,
+    .info-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-card {
+      padding: 28px;
+    }
+
+    .hero-card h2 {
+      font-size: 38px;
+      line-height: 1.1;
+      margin-bottom: 14px;
+      color: var(--navy);
+    }
+
+    .hero-card p {
+      font-size: 16px;
+      color: var(--muted);
+      line-height: 1.7;
+      max-width: 720px;
+    }
+
+    .hero-badges {
+      margin-top: 18px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .hero-badge {
       padding: 10px 14px;
-      cursor: pointer;
-      border-radius: 10px;
-      border: 1px solid #ccc;
+      border-radius: 999px;
+      background: #eff6ff;
+      color: #1d4ed8;
+      border: 1px solid #bfdbfe;
+      font-weight: 600;
+      font-size: 13px;
     }
 
-    button:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
+    .info-card {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 14px;
     }
 
-    #output,
-    #rawOutput,
-    #warnings {
-      white-space: pre-wrap;
-      border: 1px solid #eee;
-      padding: 12px;
-      border-radius: 12px;
-      min-height: 180px;
-      max-height: 500px;
-      overflow: auto;
-      background: #fff;
+    .info-card h3 {
+      font-size: 22px;
+      color: var(--navy);
     }
 
-    #warnings {
-      min-height: 60px;
+    .info-card p {
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 15px;
     }
 
-    .small {
-      color: #666;
-      font-size: 14px;
+    .mini-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
       margin-top: 8px;
     }
 
-    label {
-      display: inline-flex;
-      gap: 8px;
+    .mini-box {
+      padding: 14px;
+      border-radius: 16px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+    }
+
+    .mini-box strong {
+      display: block;
+      font-size: 20px;
+      color: var(--blue);
+      margin-bottom: 4px;
+    }
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      gap: 24px;
+    }
+
+    .upload-card {
+      padding: 24px;
+      height: fit-content;
+      position: sticky;
+      top: 24px;
+    }
+
+    .card-title {
+      font-size: 24px;
+      color: var(--navy);
+      margin-bottom: 8px;
+    }
+
+    .card-subtitle {
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 18px;
+      line-height: 1.6;
+    }
+
+    .dropzone {
+      border: 2px dashed #93c5fd;
+      background: linear-gradient(180deg, #eff6ff, #f8fbff);
+      border-radius: 22px;
+      padding: 28px 18px;
+      text-align: center;
+      transition: 0.25s ease;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .dropzone:hover {
+      transform: translateY(-2px);
+      border-color: #2563eb;
+      box-shadow: 0 14px 30px rgba(37, 99, 235, 0.12);
+    }
+
+    .dropzone.dragover {
+      border-color: #1d4ed8;
+      background: #dbeafe;
+    }
+
+    .dropzone-icon {
+      font-size: 38px;
+      margin-bottom: 10px;
+    }
+
+    .dropzone h3 {
+      font-size: 20px;
+      margin-bottom: 8px;
+      color: var(--navy);
+    }
+
+    .dropzone p {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    #fileInput {
+      display: none;
+    }
+
+    .selected-file {
+      margin-top: 14px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: #fff;
+      border: 1px solid #dbeafe;
+      color: #1e3a8a;
+      font-size: 14px;
+      word-break: break-word;
+      display: none;
+    }
+
+    .controls {
+      margin-top: 18px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .toggle-row {
+      display: flex;
+      justify-content: space-between;
       align-items: center;
+      gap: 14px;
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
     }
 
-    .muted {
-      color: #777;
+    .toggle-row .text h4 {
+      font-size: 15px;
+      color: var(--navy);
+      margin-bottom: 4px;
     }
 
-    .pill {
-      display: inline-block;
-      padding: 4px 10px;
-      border: 1px solid #ddd;
+    .toggle-row .text p {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .switch {
+      position: relative;
+      width: 56px;
+      height: 30px;
+      flex-shrink: 0;
+    }
+
+    .switch input {
+      display: none;
+    }
+
+    .slider {
+      position: absolute;
+      inset: 0;
+      background: #cbd5e1;
+      border-radius: 999px;
+      transition: 0.25s ease;
+      cursor: pointer;
+    }
+
+    .slider::before {
+      content: "";
+      position: absolute;
+      width: 24px;
+      height: 24px;
+      left: 3px;
+      top: 3px;
+      background: white;
+      border-radius: 50%;
+      transition: 0.25s ease;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.18);
+    }
+
+    .switch input:checked+.slider {
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    }
+
+    .switch input:checked+.slider::before {
+      transform: translateX(26px);
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 12px;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 16px;
+      padding: 14px 18px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.22s ease;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: white;
+      flex: 1;
+      min-width: 180px;
+      box-shadow: 0 12px 24px rgba(37, 99, 235, 0.25);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 28px rgba(37, 99, 235, 0.28);
+    }
+
+    .btn-secondary {
+      background: #fff;
+      color: var(--navy);
+      border: 1px solid #dbeafe;
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .status-box {
+      margin-top: 16px;
+      min-height: 64px;
+      padding: 16px;
+      border-radius: 18px;
+      background: linear-gradient(180deg, #eff6ff, #f8fbff);
+      border: 1px solid #bfdbfe;
+      color: #1d4ed8;
+      font-weight: 600;
+      line-height: 1.5;
+    }
+
+    .right-panels {
+      display: grid;
+      gap: 20px;
+    }
+
+    .panel-card {
+      padding: 22px;
+    }
+
+    .panel-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .panel-head h3 {
+      font-size: 22px;
+      color: var(--navy);
+    }
+
+    .panel-tag {
+      background: #eff6ff;
+      color: #1d4ed8;
+      border: 1px solid #bfdbfe;
+      padding: 7px 12px;
       border-radius: 999px;
       font-size: 12px;
+      font-weight: 700;
+    }
+
+    .output-box {
+      min-height: 220px;
+      max-height: 520px;
+      overflow: auto;
+      white-space: pre-wrap;
+      line-height: 1.7;
+      padding: 18px;
+      border-radius: 18px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      color: #1e293b;
+      font-size: 15px;
+    }
+
+    .warnings-box {
+      min-height: 110px;
+      max-height: 240px;
+      overflow: auto;
+      white-space: pre-wrap;
+      line-height: 1.7;
+      padding: 16px;
+      border-radius: 18px;
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      color: #9a3412;
+      font-size: 14px;
+    }
+
+    .raw-wrap {
+      display: none;
+    }
+
+    .raw-box {
+      min-height: 180px;
+      max-height: 340px;
+      overflow: auto;
+      white-space: pre-wrap;
+      line-height: 1.7;
+      padding: 16px;
+      border-radius: 18px;
+      background: #0f172a;
+      border: 1px solid #1e293b;
+      color: #e2e8f0;
+      font-size: 14px;
+      font-family: Consolas, monospace;
+    }
+
+    .footer-note {
+      margin-top: 26px;
+      text-align: center;
+      color: rgba(255, 255, 255, 0.88);
+      font-size: 14px;
+    }
+
+    .footer-note strong {
+      color: white;
+    }
+
+    @media (max-width: 980px) {
+
+      .hero,
+      .main-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .upload-card {
+        position: static;
+      }
+
+      .hero-card h2 {
+        font-size: 30px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .page {
+        padding: 22px 14px 40px;
+      }
+
+      .brand-text h1 {
+        font-size: 28px;
+      }
+
+      .hero-card,
+      .upload-card,
+      .panel-card,
+      .info-card {
+        border-radius: 20px;
+      }
+
+      .mini-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .action-buttons {
+        flex-direction: column;
+      }
+
+      .btn-primary,
+      .btn-secondary {
+        width: 100%;
+      }
     }
   </style>
 </head>
 
 <body>
-  <h1>Let’s start learning</h1>
+  <div class="overlay-pattern"></div>
 
-  <div class="card">
-    <input type="file" id="fileInput" accept="video/*" />
-    <div style="margin-top: 12px; display:flex; gap: 14px; align-items:center; flex-wrap: wrap;">
-      <button id="uploadBtn">Enter</button>
-
-      <label class="muted">
-        <input type="checkbox" id="polishChk" checked />
-        Polish transcript (Gemini)
-      </label>
-
-      <span class="pill" id="apiLabel"></span>
-    </div>
-
-    <p id="status" class="small"></p>
-  </div>
-
-  <div class="row" style="margin-top: 18px;">
-    <div>
-      <h2>Transcript</h2>
-      <div id="output"></div>
-    </div>
-
-    <div>
-      <h2>Warnings</h2>
-      <div id="warnings"></div>
-
-      <div style="margin-top: 14px;">
-        <label class="muted">
-          <input type="checkbox" id="showRawChk" />
-          Show raw transcript (debug)
-        </label>
+  <div class="page">
+    <div class="topbar">
+      <div class="brand">
+        <div class="brand-logo">📘</div>
+        <div class="brand-text">
+          <h1>Lectra</h1>
+          <p>Smarter lecture transcripts for students and classrooms</p>
+        </div>
       </div>
 
-      <div id="rawWrap" style="display:none; margin-top: 10px;">
-        <h3 style="margin: 8px 0;">Raw transcript</h3>
-        <div id="rawOutput"></div>
+      <div class="api-pill" id="apiLabel">API:</div>
+    </div>
+
+    <section class="hero">
+      <div class="hero-card">
+        <h2>Turn lecture videos into clean, readable study notes</h2>
+        <p>
+          Upload a class recording, generate a transcript, polish it for readability,
+          and review warnings or raw output when needed. Lectra is built to make
+          lecture review feel easier, cleaner, and more student-friendly.
+        </p>
+
+        <div class="hero-badges">
+          <div class="hero-badge">Transcript extraction</div>
+          <div class="hero-badge">AI polish support</div>
+          <div class="hero-badge">Raw transcript debug view</div>
+          <div class="hero-badge">Student-first design</div>
+        </div>
       </div>
+
+      <div class="info-card">
+        <h3>Built for school use</h3>
+        <p>
+          A classroom-inspired interface with a simple upload flow, strong readability,
+          and a layout that feels closer to a modern education platform.
+        </p>
+
+        <div class="mini-grid">
+          <div class="mini-box">
+            <strong>Fast</strong>
+            <span>Upload and process videos in one place</span>
+          </div>
+          <div class="mini-box">
+            <strong>Clean</strong>
+            <span>Readable transcript output and warnings</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="main-grid">
+      <div class="upload-card">
+        <h2 class="card-title">Upload Lecture Video</h2>
+        <p class="card-subtitle">
+          Drag and drop your class recording or click below to choose a video file.
+        </p>
+
+        <div class="dropzone" id="dropzone">
+          <div class="dropzone-icon">🎓</div>
+          <h3>Select your lecture file</h3>
+          <p>Supports video files for classroom recordings, review sessions, and lectures.</p>
+          <input type="file" id="fileInput" accept="video/*" />
+          <div class="selected-file" id="selectedFile"></div>
+        </div>
+
+        <div class="controls">
+          <div class="toggle-row">
+            <div class="text">
+              <h4>Polish transcript</h4>
+              <p>Use Gemini polishing to improve readability and structure.</p>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="polishChk" checked />
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="toggle-row">
+            <div class="text">
+              <h4>Show raw transcript</h4>
+              <p>Reveal the original debug transcript from the backend response.</p>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="showRawChk" />
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="action-buttons">
+          <button id="uploadBtn" class="btn btn-primary">Upload and Process</button>
+          <button id="clearBtn" class="btn btn-secondary" type="button">Clear Results</button>
+        </div>
+
+        <div class="status-box" id="status">Waiting for a lecture upload.</div>
+      </div>
+
+      <div class="right-panels">
+        <div class="panel-card">
+          <div class="panel-head">
+            <h3>Transcript Output</h3>
+            <span class="panel-tag">Main Result</span>
+          </div>
+          <div id="output" class="output-box"></div>
+        </div>
+
+        <div class="panel-card">
+          <div class="panel-head">
+            <h3>Warnings</h3>
+            <span class="panel-tag">Quality Notes</span>
+          </div>
+          <div id="warnings" class="warnings-box"></div>
+        </div>
+
+        <div class="panel-card raw-wrap" id="rawWrap">
+          <div class="panel-head">
+            <h3>Raw Transcript</h3>
+            <span class="panel-tag">Debug View</span>
+          </div>
+          <div id="rawOutput" class="raw-box"></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="footer-note">
+      <strong>Lectra</strong> • Classroom-focused transcript processing for better studying
     </div>
   </div>
 
   <script>
     const uploadBtn = document.getElementById("uploadBtn");
+    const clearBtn = document.getElementById("clearBtn");
     const fileInput = document.getElementById("fileInput");
     const statusEl = document.getElementById("status");
     const outputEl = document.getElementById("output");
@@ -142,37 +689,88 @@
     const rawWrap = document.getElementById("rawWrap");
     const rawOutputEl = document.getElementById("rawOutput");
     const apiLabel = document.getElementById("apiLabel");
+    const dropzone = document.getElementById("dropzone");
+    const selectedFileEl = document.getElementById("selectedFile");
 
-    // ✅ Use local backend automatically when you're running locally.
-    // If deployed, it will use your Render URL.
-    const API_BASE = (location.hostname === "localhost" || location.hostname === "127.0.0.1")
-      ? "http://127.0.0.1:8000"
-      : "https://t2lecture-backend.onrender.com";
+    const API_BASE =
+      (location.hostname === "localhost" || location.hostname === "127.0.0.1")
+        ? "http://127.0.0.1:8000"
+        : "https://t2lecture-backend.onrender.com";
 
     apiLabel.textContent = `API: ${API_BASE}`;
+
+    function prettyWarnings(data) {
+      const p = data?.polish;
+      if (!p) return "No warnings.";
+      if (p.error) return "Polish error: " + p.error;
+
+      const warnings = Array.isArray(p.warnings) ? p.warnings : [];
+      if (warnings.length === 0) return "No warnings.";
+      return warnings.map((w, i) => `${i + 1}. ${w}`).join("\n");
+    }
+
+    function updateSelectedFile() {
+      const file = fileInput.files[0];
+      if (!file) {
+        selectedFileEl.style.display = "none";
+        selectedFileEl.textContent = "";
+        return;
+      }
+
+      selectedFileEl.style.display = "block";
+      selectedFileEl.textContent = `Selected: ${file.name}`;
+    }
 
     showRawChk.addEventListener("change", () => {
       rawWrap.style.display = showRawChk.checked ? "block" : "none";
     });
 
-    function prettyWarnings(data) {
-      const p = data?.polish;
-      if (!p) return "";
-      if (p.error) return "Polish error: " + p.error;
-      const warnings = Array.isArray(p.warnings) ? p.warnings : [];
-      if (warnings.length === 0) return "(No warnings)";
-      return warnings.map((w, i) => `${i + 1}. ${w}`).join("\n");
-    }
+    dropzone.addEventListener("click", () => {
+      fileInput.click();
+    });
+
+    fileInput.addEventListener("change", updateSelectedFile);
+
+    dropzone.addEventListener("dragover", (e) => {
+      e.preventDefault();
+      dropzone.classList.add("dragover");
+    });
+
+    dropzone.addEventListener("dragleave", () => {
+      dropzone.classList.remove("dragover");
+    });
+
+    dropzone.addEventListener("drop", (e) => {
+      e.preventDefault();
+      dropzone.classList.remove("dragover");
+
+      const files = e.dataTransfer.files;
+      if (files && files.length > 0) {
+        fileInput.files = files;
+        updateSelectedFile();
+      }
+    });
+
+    clearBtn.addEventListener("click", () => {
+      fileInput.value = "";
+      updateSelectedFile();
+      statusEl.textContent = "Waiting for a lecture upload.";
+      outputEl.textContent = "";
+      warningsEl.textContent = "";
+      rawOutputEl.textContent = "";
+    });
 
     uploadBtn.addEventListener("click", async () => {
       const file = fileInput.files[0];
+
       if (!file) {
         alert("Please choose a video file.");
         return;
       }
 
       uploadBtn.disabled = true;
-      statusEl.textContent = "Uploading & processing... please wait";
+      uploadBtn.textContent = "Processing...";
+      statusEl.textContent = "Uploading and processing your lecture video...";
       outputEl.textContent = "";
       warningsEl.textContent = "";
       rawOutputEl.textContent = "";
@@ -180,38 +778,48 @@
       const formData = new FormData();
       formData.append("file", file);
 
-      // ✅ IMPORTANT: pass polish as a query param
       const url = `${API_BASE}/upload?polish=${polishChk.checked ? "true" : "false"}`;
 
       try {
-        const res = await fetch(url, { method: "POST", body: formData });
+        const res = await fetch(url, {
+          method: "POST",
+          body: formData
+        });
 
-        // If backend returns non-JSON error, handle gracefully
         const text = await res.text();
         let data = null;
-        try { data = JSON.parse(text); } catch { /* not JSON */ }
+
+        try {
+          data = JSON.parse(text);
+        } catch {
+          data = null;
+        }
 
         if (!res.ok) {
           statusEl.textContent = `Error (${res.status}): ${res.statusText}`;
           outputEl.textContent = data ? JSON.stringify(data, null, 2) : text;
+          warningsEl.textContent = "The backend returned an error response.";
           return;
         }
 
         if (data?.error) {
           statusEl.textContent = "Error: " + data.error;
           outputEl.textContent = JSON.stringify(data, null, 2);
+          warningsEl.textContent = "A backend error occurred while processing the file.";
           return;
         }
 
-        statusEl.textContent = `Done. language=${data.language || "?"}  polish=${polishChk.checked}`;
-        outputEl.textContent = data.text || "(empty)";
+        statusEl.textContent = `Done. Language: ${data.language || "unknown"} | Polish: ${polishChk.checked ? "enabled" : "disabled"}`;
+        outputEl.textContent = data.text || "(empty transcript)";
         warningsEl.textContent = prettyWarnings(data);
         rawOutputEl.textContent = data.raw_text || "";
       } catch (e) {
         statusEl.textContent = "Failed to reach backend. Is it running?";
         outputEl.textContent = String(e);
+        warningsEl.textContent = "Could not connect to the API.";
       } finally {
         uploadBtn.disabled = false;
+        uploadBtn.textContent = "Upload and Process";
       }
     });
   </script>
