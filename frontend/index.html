@@ -29,7 +29,7 @@
       color: var(--text);
       background:
         linear-gradient(rgba(10, 18, 35, 0.60), rgba(10, 18, 35, 0.65)),
-        url("https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=1600&q=80") center/cover no-repeat fixed;
+        url("./classroom-bg.jpg") center/cover no-repeat fixed;
       overflow-x: hidden;
     }
 
@@ -55,7 +55,7 @@
     }
 
     .brand img {
-      width: 230px;
+      width: 260px;
       max-width: 100%;
       height: auto;
       display: block;
@@ -92,12 +92,6 @@
       border-radius: 24px;
       backdrop-filter: blur(16px);
       box-shadow: var(--shadow);
-    }
-
-    .hero-card,
-    .info-card,
-    .upload-card,
-    .panel-card {
       padding: 24px;
     }
 
@@ -329,11 +323,6 @@
       box-shadow: 0 12px 24px rgba(37,99,235,0.25);
     }
 
-    .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 16px 28px rgba(37,99,235,0.28);
-    }
-
     .btn-secondary {
       background: #fff;
       color: var(--navy);
@@ -343,7 +332,6 @@
     .btn:disabled {
       opacity: 0.65;
       cursor: not-allowed;
-      transform: none;
     }
 
     .status-text {
@@ -414,6 +402,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      margin-bottom: 18px;
     }
 
     video {
@@ -429,6 +418,20 @@
       text-align: center;
       padding: 20px;
       line-height: 1.6;
+    }
+
+    .output-box {
+      min-height: 220px;
+      max-height: 420px;
+      overflow: auto;
+      white-space: pre-wrap;
+      line-height: 1.7;
+      padding: 18px;
+      border-radius: 18px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      color: #1e293b;
+      font-size: 15px;
     }
 
     .raw-wrap {
@@ -471,39 +474,14 @@
         font-size: 30px;
       }
     }
-
-    @media (max-width: 640px) {
-      .page {
-        padding: 20px 14px 40px;
-      }
-
-      .mini-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .action-buttons {
-        flex-direction: column;
-      }
-
-      .btn-primary,
-      .btn-secondary {
-        width: 100%;
-      }
-
-      .brand img {
-        width: 180px;
-      }
-    }
   </style>
 </head>
 <body>
   <div class="page">
     <div class="topbar">
       <div class="brand">
-        <!-- Put your logo image file in the same folder as this HTML -->
         <img src="./lectra-logo.png" alt="Lectra logo" />
       </div>
-
       <div class="api-pill" id="apiLabel">API:</div>
     </div>
 
@@ -511,33 +489,33 @@
       <div class="hero-card">
         <h2>Transform lecture recordings into polished study media</h2>
         <p>
-          Upload your class video, process it through Lectra, and review the output
-          in a cleaner, more interactive interface designed for students.
+          Upload your class video, process it through Lectra, and review the video preview
+          and transcript in one clean interface.
         </p>
 
         <div class="hero-badges">
           <div class="hero-badge">Lecture processing</div>
           <div class="hero-badge">AI polish support</div>
           <div class="hero-badge">Video preview</div>
-          <div class="hero-badge">Student-first design</div>
+          <div class="hero-badge">Transcript output</div>
         </div>
       </div>
 
       <div class="info-card">
         <h3>Built for school use</h3>
         <p>
-          Lectra gives your project a cleaner academic brand with a modern upload flow,
-          loading progress, and a dedicated video output area.
+          Lectra gives your project a cleaner academic interface with a classroom-style layout,
+          video preview, transcript output, and a loading bar during processing.
         </p>
 
         <div class="mini-grid">
           <div class="mini-box">
-            <strong>Visual</strong>
-            <span>Preview the uploaded video directly</span>
+            <strong>Preview</strong>
+            <span>Watch the uploaded lecture video</span>
           </div>
           <div class="mini-box">
-            <strong>Interactive</strong>
-            <span>Loading bar instead of a warning box</span>
+            <strong>Transcript</strong>
+            <span>Read the polished transcript output</span>
           </div>
         </div>
       </div>
@@ -603,12 +581,18 @@
             <span class="panel-tag">Preview</span>
           </div>
 
-          <div class="video-box" id="videoBox">
+          <div class="video-box">
             <div class="video-placeholder" id="videoPlaceholder">
               Your uploaded lecture video will appear here.
             </div>
             <video id="videoOutput" controls style="display:none;"></video>
           </div>
+
+          <div class="panel-head">
+            <h3>Transcript Output</h3>
+            <span class="panel-tag">Main Result</span>
+          </div>
+          <div id="output" class="output-box"></div>
         </div>
 
         <div class="panel-card raw-wrap" id="rawWrap">
@@ -634,6 +618,7 @@
     const showRawChk = document.getElementById("showRawChk");
     const rawWrap = document.getElementById("rawWrap");
     const rawOutputEl = document.getElementById("rawOutput");
+    const outputEl = document.getElementById("output");
     const apiLabel = document.getElementById("apiLabel");
     const dropzone = document.getElementById("dropzone");
     const selectedFileEl = document.getElementById("selectedFile");
@@ -738,6 +723,7 @@
     clearBtn.addEventListener("click", () => {
       fileInput.value = "";
       updateSelectedFile();
+      outputEl.textContent = "";
       rawOutputEl.textContent = "";
       statusText.textContent = "Waiting for a lecture upload.";
       resetProgress();
@@ -760,6 +746,7 @@
       uploadBtn.disabled = true;
       uploadBtn.textContent = "Processing...";
       statusText.textContent = "Uploading and processing your lecture video...";
+      outputEl.textContent = "";
       rawOutputEl.textContent = "";
       startFakeProgress();
 
@@ -785,24 +772,25 @@
 
         if (!res.ok) {
           statusText.textContent = `Error (${res.status}): ${res.statusText}`;
-          if (data) rawOutputEl.textContent = JSON.stringify(data, null, 2);
+          outputEl.textContent = data ? JSON.stringify(data, null, 2) : text;
           finishProgress();
           return;
         }
 
         if (data?.error) {
           statusText.textContent = "Processing finished with a backend message.";
-          rawOutputEl.textContent = JSON.stringify(data, null, 2);
+          outputEl.textContent = JSON.stringify(data, null, 2);
           finishProgress();
           return;
         }
 
         statusText.textContent = `Done. Language: ${data.language || "unknown"} | Polish: ${polishChk.checked ? "enabled" : "disabled"}`;
+        outputEl.textContent = data.text || "(empty transcript)";
         rawOutputEl.textContent = data.raw_text || "";
         finishProgress();
       } catch (e) {
         statusText.textContent = "Failed to reach backend. Is it running?";
-        rawOutputEl.textContent = String(e);
+        outputEl.textContent = String(e);
         finishProgress();
       } finally {
         uploadBtn.disabled = false;
