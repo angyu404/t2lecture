@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -13,15 +12,14 @@
     }
 
     :root {
-      --navy: #102542;
-      --blue: #1f6feb;
-      --light-blue: #dbeafe;
-      --gold: #fbbf24;
-      --cream: #f8fafc;
-      --white: rgba(255, 255, 255, 0.88);
+      --navy: #0f1f3d;
+      --blue: #2563eb;
+      --gold: #c98a2e;
+      --light: #f8fafc;
+      --white: rgba(255,255,255,0.9);
       --text: #0f172a;
       --muted: #475569;
-      --border: rgba(255, 255, 255, 0.25);
+      --border: rgba(255,255,255,0.22);
       --shadow: 0 20px 45px rgba(15, 23, 42, 0.18);
     }
 
@@ -30,28 +28,15 @@
       min-height: 100vh;
       color: var(--text);
       background:
-        linear-gradient(rgba(10, 20, 40, 0.55), rgba(10, 20, 40, 0.6)),
-        url("https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1600&q=80") center/cover no-repeat fixed;
+        linear-gradient(rgba(10, 18, 35, 0.60), rgba(10, 18, 35, 0.65)),
+        url("https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=1600&q=80") center/cover no-repeat fixed;
       overflow-x: hidden;
     }
 
-    .overlay-pattern {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      background:
-        radial-gradient(circle at 15% 20%, rgba(255, 255, 255, 0.08), transparent 18%),
-        radial-gradient(circle at 85% 30%, rgba(255, 255, 255, 0.06), transparent 16%),
-        radial-gradient(circle at 50% 85%, rgba(251, 191, 36, 0.08), transparent 18%);
-      z-index: 0;
-    }
-
     .page {
-      position: relative;
-      z-index: 1;
       max-width: 1220px;
       margin: 0 auto;
-      padding: 36px 20px 60px;
+      padding: 34px 20px 60px;
     }
 
     .topbar {
@@ -66,88 +51,76 @@
     .brand {
       display: flex;
       align-items: center;
-      gap: 14px;
+      gap: 16px;
     }
 
-    .brand-logo {
-      width: 60px;
-      height: 60px;
-      border-radius: 18px;
-      display: grid;
-      place-items: center;
-      background: linear-gradient(135deg, #2563eb, #1e40af);
-      color: white;
-      font-size: 28px;
-      box-shadow: var(--shadow);
-      border: 1px solid rgba(255, 255, 255, 0.25);
-    }
-
-    .brand-text h1 {
-      font-size: 34px;
-      line-height: 1;
-      color: white;
-      letter-spacing: 0.5px;
-    }
-
-    .brand-text p {
-      margin-top: 6px;
-      color: rgba(255, 255, 255, 0.85);
-      font-size: 15px;
+    .brand img {
+      width: 230px;
+      max-width: 100%;
+      height: auto;
+      display: block;
     }
 
     .api-pill {
       padding: 10px 16px;
       border-radius: 999px;
-      background: rgba(255, 255, 255, 0.14);
+      background: rgba(255,255,255,0.14);
       color: white;
       backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.18);
+      border: 1px solid rgba(255,255,255,0.18);
       font-size: 13px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+    }
+
+    .hero,
+    .main-grid {
+      display: grid;
+      gap: 24px;
     }
 
     .hero {
-      display: grid;
       grid-template-columns: 1.1fr 0.9fr;
-      gap: 24px;
       margin-bottom: 26px;
     }
 
     .hero-card,
+    .info-card,
     .upload-card,
-    .panel-card,
-    .info-card {
+    .panel-card {
       background: var(--white);
       border: 1px solid var(--border);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
       border-radius: 24px;
+      backdrop-filter: blur(16px);
       box-shadow: var(--shadow);
     }
 
-    .hero-card {
-      padding: 28px;
+    .hero-card,
+    .info-card,
+    .upload-card,
+    .panel-card {
+      padding: 24px;
     }
 
     .hero-card h2 {
       font-size: 38px;
       line-height: 1.1;
-      margin-bottom: 14px;
       color: var(--navy);
+      margin-bottom: 14px;
     }
 
-    .hero-card p {
-      font-size: 16px;
+    .hero-card p,
+    .info-card p,
+    .card-subtitle {
       color: var(--muted);
       line-height: 1.7;
-      max-width: 720px;
+      font-size: 15px;
     }
 
     .hero-badges {
-      margin-top: 18px;
       display: flex;
       flex-wrap: wrap;
       gap: 12px;
+      margin-top: 18px;
     }
 
     .hero-badge {
@@ -156,34 +129,26 @@
       background: #eff6ff;
       color: #1d4ed8;
       border: 1px solid #bfdbfe;
-      font-weight: 600;
       font-size: 13px;
+      font-weight: 600;
     }
 
-    .info-card {
-      padding: 24px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      gap: 14px;
-    }
-
-    .info-card h3 {
-      font-size: 22px;
+    .info-card h3,
+    .card-title,
+    .panel-head h3 {
       color: var(--navy);
     }
 
-    .info-card p {
-      color: var(--muted);
-      line-height: 1.7;
-      font-size: 15px;
+    .info-card h3 {
+      font-size: 24px;
+      margin-bottom: 12px;
     }
 
     .mini-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 12px;
-      margin-top: 8px;
+      margin-top: 14px;
     }
 
     .mini-box {
@@ -195,19 +160,16 @@
 
     .mini-box strong {
       display: block;
-      font-size: 20px;
       color: var(--blue);
       margin-bottom: 4px;
+      font-size: 18px;
     }
 
     .main-grid {
-      display: grid;
       grid-template-columns: 420px 1fr;
-      gap: 24px;
     }
 
     .upload-card {
-      padding: 24px;
       height: fit-content;
       position: sticky;
       top: 24px;
@@ -215,15 +177,7 @@
 
     .card-title {
       font-size: 24px;
-      color: var(--navy);
       margin-bottom: 8px;
-    }
-
-    .card-subtitle {
-      color: var(--muted);
-      font-size: 14px;
-      margin-bottom: 18px;
-      line-height: 1.6;
     }
 
     .dropzone {
@@ -234,8 +188,6 @@
       text-align: center;
       transition: 0.25s ease;
       cursor: pointer;
-      position: relative;
-      overflow: hidden;
     }
 
     .dropzone:hover {
@@ -250,7 +202,7 @@
     }
 
     .dropzone-icon {
-      font-size: 38px;
+      font-size: 40px;
       margin-bottom: 10px;
     }
 
@@ -341,14 +293,14 @@
       background: white;
       border-radius: 50%;
       transition: 0.25s ease;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.18);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.18);
     }
 
-    .switch input:checked+.slider {
+    .switch input:checked + .slider {
       background: linear-gradient(135deg, #2563eb, #1d4ed8);
     }
 
-    .switch input:checked+.slider::before {
+    .switch input:checked + .slider::before {
       transform: translateX(26px);
     }
 
@@ -374,12 +326,12 @@
       color: white;
       flex: 1;
       min-width: 180px;
-      box-shadow: 0 12px 24px rgba(37, 99, 235, 0.25);
+      box-shadow: 0 12px 24px rgba(37,99,235,0.25);
     }
 
     .btn-primary:hover {
       transform: translateY(-2px);
-      box-shadow: 0 16px 28px rgba(37, 99, 235, 0.28);
+      box-shadow: 0 16px 28px rgba(37,99,235,0.28);
     }
 
     .btn-secondary {
@@ -389,21 +341,39 @@
     }
 
     .btn:disabled {
-      opacity: 0.6;
+      opacity: 0.65;
       cursor: not-allowed;
       transform: none;
     }
 
-    .status-box {
+    .status-text {
       margin-top: 16px;
-      min-height: 64px;
-      padding: 16px;
-      border-radius: 18px;
-      background: linear-gradient(180deg, #eff6ff, #f8fbff);
-      border: 1px solid #bfdbfe;
-      color: #1d4ed8;
+      color: #1e3a8a;
       font-weight: 600;
-      line-height: 1.5;
+      font-size: 14px;
+      min-height: 22px;
+    }
+
+    .progress-wrap {
+      margin-top: 12px;
+      display: none;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 14px;
+      background: #dbeafe;
+      border-radius: 999px;
+      overflow: hidden;
+      border: 1px solid #bfdbfe;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #2563eb, #60a5fa, #c98a2e);
+      transition: width 0.35s ease;
     }
 
     .right-panels {
@@ -411,22 +381,17 @@
       gap: 20px;
     }
 
-    .panel-card {
-      padding: 22px;
-    }
-
     .panel-head {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 14px;
-      margin-bottom: 16px;
+      gap: 12px;
       flex-wrap: wrap;
+      margin-bottom: 16px;
     }
 
     .panel-head h3 {
       font-size: 22px;
-      color: var(--navy);
     }
 
     .panel-tag {
@@ -439,32 +404,31 @@
       font-weight: 700;
     }
 
-    .output-box {
-      min-height: 220px;
-      max-height: 520px;
-      overflow: auto;
-      white-space: pre-wrap;
-      line-height: 1.7;
-      padding: 18px;
+    .video-box {
+      width: 100%;
+      aspect-ratio: 16 / 9;
       border-radius: 18px;
-      background: #f8fafc;
-      border: 1px solid #e2e8f0;
-      color: #1e293b;
-      font-size: 15px;
+      overflow: hidden;
+      background: #0f172a;
+      border: 1px solid #1e293b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    .warnings-box {
-      min-height: 110px;
-      max-height: 240px;
-      overflow: auto;
-      white-space: pre-wrap;
-      line-height: 1.7;
-      padding: 16px;
-      border-radius: 18px;
-      background: #fff7ed;
-      border: 1px solid #fed7aa;
-      color: #9a3412;
-      font-size: 14px;
+    video {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background: #000;
+    }
+
+    .video-placeholder {
+      color: #cbd5e1;
+      font-size: 15px;
+      text-align: center;
+      padding: 20px;
+      line-height: 1.6;
     }
 
     .raw-wrap {
@@ -489,16 +453,11 @@
     .footer-note {
       margin-top: 26px;
       text-align: center;
-      color: rgba(255, 255, 255, 0.88);
+      color: rgba(255,255,255,0.88);
       font-size: 14px;
     }
 
-    .footer-note strong {
-      color: white;
-    }
-
     @media (max-width: 980px) {
-
       .hero,
       .main-grid {
         grid-template-columns: 1fr;
@@ -515,18 +474,7 @@
 
     @media (max-width: 640px) {
       .page {
-        padding: 22px 14px 40px;
-      }
-
-      .brand-text h1 {
-        font-size: 28px;
-      }
-
-      .hero-card,
-      .upload-card,
-      .panel-card,
-      .info-card {
-        border-radius: 20px;
+        padding: 20px 14px 40px;
       }
 
       .mini-grid {
@@ -541,21 +489,19 @@
       .btn-secondary {
         width: 100%;
       }
+
+      .brand img {
+        width: 180px;
+      }
     }
   </style>
 </head>
-
 <body>
-  <div class="overlay-pattern"></div>
-
   <div class="page">
     <div class="topbar">
       <div class="brand">
-        <div class="brand-logo">📘</div>
-        <div class="brand-text">
-          <h1>Lectra</h1>
-          <p>Smarter lecture transcripts for students and classrooms</p>
-        </div>
+        <!-- Put your logo image file in the same folder as this HTML -->
+        <img src="./lectra-logo.png" alt="Lectra logo" />
       </div>
 
       <div class="api-pill" id="apiLabel">API:</div>
@@ -563,17 +509,16 @@
 
     <section class="hero">
       <div class="hero-card">
-        <h2>Turn lecture videos into clean, readable study notes</h2>
+        <h2>Transform lecture recordings into polished study media</h2>
         <p>
-          Upload a class recording, generate a transcript, polish it for readability,
-          and review warnings or raw output when needed. Lectra is built to make
-          lecture review feel easier, cleaner, and more student-friendly.
+          Upload your class video, process it through Lectra, and review the output
+          in a cleaner, more interactive interface designed for students.
         </p>
 
         <div class="hero-badges">
-          <div class="hero-badge">Transcript extraction</div>
+          <div class="hero-badge">Lecture processing</div>
           <div class="hero-badge">AI polish support</div>
-          <div class="hero-badge">Raw transcript debug view</div>
+          <div class="hero-badge">Video preview</div>
           <div class="hero-badge">Student-first design</div>
         </div>
       </div>
@@ -581,18 +526,18 @@
       <div class="info-card">
         <h3>Built for school use</h3>
         <p>
-          A classroom-inspired interface with a simple upload flow, strong readability,
-          and a layout that feels closer to a modern education platform.
+          Lectra gives your project a cleaner academic brand with a modern upload flow,
+          loading progress, and a dedicated video output area.
         </p>
 
         <div class="mini-grid">
           <div class="mini-box">
-            <strong>Fast</strong>
-            <span>Upload and process videos in one place</span>
+            <strong>Visual</strong>
+            <span>Preview the uploaded video directly</span>
           </div>
           <div class="mini-box">
-            <strong>Clean</strong>
-            <span>Readable transcript output and warnings</span>
+            <strong>Interactive</strong>
+            <span>Loading bar instead of a warning box</span>
           </div>
         </div>
       </div>
@@ -602,13 +547,13 @@
       <div class="upload-card">
         <h2 class="card-title">Upload Lecture Video</h2>
         <p class="card-subtitle">
-          Drag and drop your class recording or click below to choose a video file.
+          Drag and drop your lecture recording or click below to choose a file.
         </p>
 
         <div class="dropzone" id="dropzone">
           <div class="dropzone-icon">🎓</div>
           <h3>Select your lecture file</h3>
-          <p>Supports video files for classroom recordings, review sessions, and lectures.</p>
+          <p>Supports classroom videos, lecture captures, and study recordings.</p>
           <input type="file" id="fileInput" accept="video/*" />
           <div class="selected-file" id="selectedFile"></div>
         </div>
@@ -617,7 +562,7 @@
           <div class="toggle-row">
             <div class="text">
               <h4>Polish transcript</h4>
-              <p>Use Gemini polishing to improve readability and structure.</p>
+              <p>Use AI polishing to improve readability and structure.</p>
             </div>
             <label class="switch">
               <input type="checkbox" id="polishChk" checked />
@@ -628,7 +573,7 @@
           <div class="toggle-row">
             <div class="text">
               <h4>Show raw transcript</h4>
-              <p>Reveal the original debug transcript from the backend response.</p>
+              <p>Reveal the original transcript from the backend response.</p>
             </div>
             <label class="switch">
               <input type="checkbox" id="showRawChk" />
@@ -639,27 +584,31 @@
 
         <div class="action-buttons">
           <button id="uploadBtn" class="btn btn-primary">Upload and Process</button>
-          <button id="clearBtn" class="btn btn-secondary" type="button">Clear Results</button>
+          <button id="clearBtn" class="btn btn-secondary" type="button">Clear</button>
         </div>
 
-        <div class="status-box" id="status">Waiting for a lecture upload.</div>
+        <div class="status-text" id="statusText">Waiting for a lecture upload.</div>
+
+        <div class="progress-wrap" id="progressWrap">
+          <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+          </div>
+        </div>
       </div>
 
       <div class="right-panels">
         <div class="panel-card">
           <div class="panel-head">
-            <h3>Transcript Output</h3>
-            <span class="panel-tag">Main Result</span>
+            <h3>Video Output</h3>
+            <span class="panel-tag">Preview</span>
           </div>
-          <div id="output" class="output-box"></div>
-        </div>
 
-        <div class="panel-card">
-          <div class="panel-head">
-            <h3>Warnings</h3>
-            <span class="panel-tag">Quality Notes</span>
+          <div class="video-box" id="videoBox">
+            <div class="video-placeholder" id="videoPlaceholder">
+              Your uploaded lecture video will appear here.
+            </div>
+            <video id="videoOutput" controls style="display:none;"></video>
           </div>
-          <div id="warnings" class="warnings-box"></div>
         </div>
 
         <div class="panel-card raw-wrap" id="rawWrap">
@@ -673,7 +622,7 @@
     </section>
 
     <div class="footer-note">
-      <strong>Lectra</strong> • Classroom-focused transcript processing for better studying
+      <strong>Lectra</strong> • Study. Refined.
     </div>
   </div>
 
@@ -681,9 +630,6 @@
     const uploadBtn = document.getElementById("uploadBtn");
     const clearBtn = document.getElementById("clearBtn");
     const fileInput = document.getElementById("fileInput");
-    const statusEl = document.getElementById("status");
-    const outputEl = document.getElementById("output");
-    const warningsEl = document.getElementById("warnings");
     const polishChk = document.getElementById("polishChk");
     const showRawChk = document.getElementById("showRawChk");
     const rawWrap = document.getElementById("rawWrap");
@@ -691,6 +637,11 @@
     const apiLabel = document.getElementById("apiLabel");
     const dropzone = document.getElementById("dropzone");
     const selectedFileEl = document.getElementById("selectedFile");
+    const statusText = document.getElementById("statusText");
+    const progressWrap = document.getElementById("progressWrap");
+    const progressFill = document.getElementById("progressFill");
+    const videoOutput = document.getElementById("videoOutput");
+    const videoPlaceholder = document.getElementById("videoPlaceholder");
 
     const API_BASE =
       (location.hostname === "localhost" || location.hostname === "127.0.0.1")
@@ -699,14 +650,34 @@
 
     apiLabel.textContent = `API: ${API_BASE}`;
 
-    function prettyWarnings(data) {
-      const p = data?.polish;
-      if (!p) return "No warnings.";
-      if (p.error) return "Polish error: " + p.error;
+    let progressTimer = null;
 
-      const warnings = Array.isArray(p.warnings) ? p.warnings : [];
-      if (warnings.length === 0) return "No warnings.";
-      return warnings.map((w, i) => `${i + 1}. ${w}`).join("\n");
+    function startFakeProgress() {
+      progressWrap.style.display = "block";
+      progressFill.style.width = "8%";
+
+      let width = 8;
+      progressTimer = setInterval(() => {
+        if (width < 88) {
+          width += Math.random() * 10;
+          progressFill.style.width = Math.min(width, 88) + "%";
+        }
+      }, 500);
+    }
+
+    function finishProgress() {
+      if (progressTimer) clearInterval(progressTimer);
+      progressFill.style.width = "100%";
+      setTimeout(() => {
+        progressWrap.style.display = "none";
+        progressFill.style.width = "0%";
+      }, 700);
+    }
+
+    function resetProgress() {
+      if (progressTimer) clearInterval(progressTimer);
+      progressWrap.style.display = "none";
+      progressFill.style.width = "0%";
     }
 
     function updateSelectedFile() {
@@ -721,6 +692,14 @@
       selectedFileEl.textContent = `Selected: ${file.name}`;
     }
 
+    function previewVideo(file) {
+      if (!file) return;
+      const url = URL.createObjectURL(file);
+      videoOutput.src = url;
+      videoOutput.style.display = "block";
+      videoPlaceholder.style.display = "none";
+    }
+
     showRawChk.addEventListener("change", () => {
       rawWrap.style.display = showRawChk.checked ? "block" : "none";
     });
@@ -729,7 +708,11 @@
       fileInput.click();
     });
 
-    fileInput.addEventListener("change", updateSelectedFile);
+    fileInput.addEventListener("change", () => {
+      updateSelectedFile();
+      const file = fileInput.files[0];
+      if (file) previewVideo(file);
+    });
 
     dropzone.addEventListener("dragover", (e) => {
       e.preventDefault();
@@ -748,16 +731,22 @@
       if (files && files.length > 0) {
         fileInput.files = files;
         updateSelectedFile();
+        previewVideo(files[0]);
       }
     });
 
     clearBtn.addEventListener("click", () => {
       fileInput.value = "";
       updateSelectedFile();
-      statusEl.textContent = "Waiting for a lecture upload.";
-      outputEl.textContent = "";
-      warningsEl.textContent = "";
       rawOutputEl.textContent = "";
+      statusText.textContent = "Waiting for a lecture upload.";
+      resetProgress();
+
+      videoOutput.pause();
+      videoOutput.removeAttribute("src");
+      videoOutput.load();
+      videoOutput.style.display = "none";
+      videoPlaceholder.style.display = "block";
     });
 
     uploadBtn.addEventListener("click", async () => {
@@ -770,10 +759,9 @@
 
       uploadBtn.disabled = true;
       uploadBtn.textContent = "Processing...";
-      statusEl.textContent = "Uploading and processing your lecture video...";
-      outputEl.textContent = "";
-      warningsEl.textContent = "";
+      statusText.textContent = "Uploading and processing your lecture video...";
       rawOutputEl.textContent = "";
+      startFakeProgress();
 
       const formData = new FormData();
       formData.append("file", file);
@@ -796,27 +784,26 @@
         }
 
         if (!res.ok) {
-          statusEl.textContent = `Error (${res.status}): ${res.statusText}`;
-          outputEl.textContent = data ? JSON.stringify(data, null, 2) : text;
-          warningsEl.textContent = "The backend returned an error response.";
+          statusText.textContent = `Error (${res.status}): ${res.statusText}`;
+          if (data) rawOutputEl.textContent = JSON.stringify(data, null, 2);
+          finishProgress();
           return;
         }
 
         if (data?.error) {
-          statusEl.textContent = "Error: " + data.error;
-          outputEl.textContent = JSON.stringify(data, null, 2);
-          warningsEl.textContent = "A backend error occurred while processing the file.";
+          statusText.textContent = "Processing finished with a backend message.";
+          rawOutputEl.textContent = JSON.stringify(data, null, 2);
+          finishProgress();
           return;
         }
 
-        statusEl.textContent = `Done. Language: ${data.language || "unknown"} | Polish: ${polishChk.checked ? "enabled" : "disabled"}`;
-        outputEl.textContent = data.text || "(empty transcript)";
-        warningsEl.textContent = prettyWarnings(data);
+        statusText.textContent = `Done. Language: ${data.language || "unknown"} | Polish: ${polishChk.checked ? "enabled" : "disabled"}`;
         rawOutputEl.textContent = data.raw_text || "";
+        finishProgress();
       } catch (e) {
-        statusEl.textContent = "Failed to reach backend. Is it running?";
-        outputEl.textContent = String(e);
-        warningsEl.textContent = "Could not connect to the API.";
+        statusText.textContent = "Failed to reach backend. Is it running?";
+        rawOutputEl.textContent = String(e);
+        finishProgress();
       } finally {
         uploadBtn.disabled = false;
         uploadBtn.textContent = "Upload and Process";
@@ -824,5 +811,4 @@
     });
   </script>
 </body>
-
 </html>
