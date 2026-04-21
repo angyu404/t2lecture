@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Lectra</title>
+
   <style>
     * {
       margin: 0;
@@ -11,792 +13,125 @@
       box-sizing: border-box;
     }
 
-    :root {
-      --navy: #0f1f3d;
-      --blue: #2563eb;
-      --gold: #c98a2e;
-      --light: #f8fafc;
-      --white: rgba(255,255,255,0.9);
-      --text: #0f172a;
-      --muted: #475569;
-      --border: rgba(255,255,255,0.22);
-      --shadow: 0 20px 45px rgba(15, 23, 42, 0.18);
-    }
-
     body {
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      min-height: 100vh;
-      color: var(--text);
-      background:
-        linear-gradient(rgba(10, 18, 35, 0.60), rgba(10, 18, 35, 0.65)),
-        url("./classroom-bg.jpg") center/cover no-repeat fixed;
-      overflow-x: hidden;
-    }
-
-    .page {
-      max-width: 1220px;
-      margin: 0 auto;
-      padding: 34px 20px 60px;
-    }
-
-    .topbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 18px;
-      margin-bottom: 28px;
-      flex-wrap: wrap;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-
-    .brand img {
-      width: 260px;
-      max-width: 100%;
-      height: auto;
-      display: block;
-    }
-
-    .api-pill {
-      padding: 10px 16px;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.14);
+      font-family: Arial;
+      background: #0f172a;
       color: white;
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255,255,255,0.18);
-      font-size: 13px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.12);
-    }
-
-    .hero,
-    .main-grid {
-      display: grid;
-      gap: 24px;
-    }
-
-    .hero {
-      grid-template-columns: 1.1fr 0.9fr;
-      margin-bottom: 26px;
-    }
-
-    .hero-card,
-    .info-card,
-    .upload-card,
-    .panel-card {
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: 24px;
-      backdrop-filter: blur(16px);
-      box-shadow: var(--shadow);
-      padding: 24px;
-    }
-
-    .hero-card h2 {
-      font-size: 38px;
-      line-height: 1.1;
-      color: var(--navy);
-      margin-bottom: 14px;
-    }
-
-    .hero-card p,
-    .info-card p,
-    .card-subtitle {
-      color: var(--muted);
-      line-height: 1.7;
-      font-size: 15px;
-    }
-
-    .hero-badges {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 18px;
-    }
-
-    .hero-badge {
-      padding: 10px 14px;
-      border-radius: 999px;
-      background: #eff6ff;
-      color: #1d4ed8;
-      border: 1px solid #bfdbfe;
-      font-size: 13px;
-      font-weight: 600;
-    }
-
-    .info-card h3,
-    .card-title,
-    .panel-head h3 {
-      color: var(--navy);
-    }
-
-    .info-card h3 {
-      font-size: 24px;
-      margin-bottom: 12px;
-    }
-
-    .mini-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-top: 14px;
-    }
-
-    .mini-box {
-      padding: 14px;
-      border-radius: 16px;
-      background: #f8fafc;
-      border: 1px solid #e2e8f0;
-    }
-
-    .mini-box strong {
-      display: block;
-      color: var(--blue);
-      margin-bottom: 4px;
-      font-size: 18px;
-    }
-
-    .main-grid {
-      grid-template-columns: 420px 1fr;
-    }
-
-    .upload-card {
-      height: fit-content;
-      position: sticky;
-      top: 24px;
-    }
-
-    .card-title {
-      font-size: 24px;
-      margin-bottom: 8px;
-    }
-
-    .dropzone {
-      border: 2px dashed #93c5fd;
-      background: linear-gradient(180deg, #eff6ff, #f8fbff);
-      border-radius: 22px;
-      padding: 28px 18px;
-      text-align: center;
-      transition: 0.25s ease;
-      cursor: pointer;
-    }
-
-    .dropzone:hover {
-      transform: translateY(-2px);
-      border-color: #2563eb;
-      box-shadow: 0 14px 30px rgba(37, 99, 235, 0.12);
-    }
-
-    .dropzone.dragover {
-      border-color: #1d4ed8;
-      background: #dbeafe;
-    }
-
-    .dropzone-icon {
-      font-size: 40px;
-      margin-bottom: 10px;
-    }
-
-    .dropzone h3 {
-      font-size: 20px;
-      margin-bottom: 8px;
-      color: var(--navy);
-    }
-
-    .dropzone p {
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.6;
-    }
-
-    #fileInput {
-      display: none;
-    }
-
-    .selected-file {
-      margin-top: 14px;
-      padding: 12px 14px;
-      border-radius: 14px;
-      background: #fff;
-      border: 1px solid #dbeafe;
-      color: #1e3a8a;
-      font-size: 14px;
-      word-break: break-word;
-      display: none;
-    }
-
-    .controls {
-      margin-top: 18px;
-      display: grid;
-      gap: 14px;
-    }
-
-    .toggle-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 14px;
-      padding: 14px 16px;
-      border-radius: 16px;
-      background: #f8fafc;
-      border: 1px solid #e2e8f0;
-    }
-
-    .toggle-row .text h4 {
-      font-size: 15px;
-      color: var(--navy);
-      margin-bottom: 4px;
-    }
-
-    .toggle-row .text p {
-      font-size: 13px;
-      color: var(--muted);
-      line-height: 1.5;
-    }
-
-    .switch {
-      position: relative;
-      width: 56px;
-      height: 30px;
-      flex-shrink: 0;
-    }
-
-    .switch input {
-      display: none;
-    }
-
-    .slider {
-      position: absolute;
-      inset: 0;
-      background: #cbd5e1;
-      border-radius: 999px;
-      transition: 0.25s ease;
-      cursor: pointer;
-    }
-
-    .slider::before {
-      content: "";
-      position: absolute;
-      width: 24px;
-      height: 24px;
-      left: 3px;
-      top: 3px;
-      background: white;
-      border-radius: 50%;
-      transition: 0.25s ease;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.18);
-    }
-
-    .switch input:checked + .slider {
-      background: linear-gradient(135deg, #2563eb, #1d4ed8);
-    }
-
-    .switch input:checked + .slider::before {
-      transform: translateX(26px);
-    }
-
-    .action-buttons {
-      display: flex;
-      gap: 12px;
-      margin-top: 16px;
-      flex-wrap: wrap;
-    }
-
-    .btn {
-      border: none;
-      border-radius: 16px;
-      padding: 14px 18px;
-      font-size: 15px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: 0.22s ease;
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, #2563eb, #1d4ed8);
-      color: white;
-      flex: 1;
-      min-width: 180px;
-      box-shadow: 0 12px 24px rgba(37,99,235,0.25);
-    }
-
-    .btn-secondary {
-      background: #fff;
-      color: var(--navy);
-      border: 1px solid #dbeafe;
-    }
-
-    .btn:disabled {
-      opacity: 0.65;
-      cursor: not-allowed;
-    }
-
-    .status-text {
-      margin-top: 16px;
-      color: #1e3a8a;
-      font-weight: 600;
-      font-size: 14px;
-      min-height: 22px;
-    }
-
-    .progress-wrap {
-      margin-top: 12px;
-      display: none;
-    }
-
-    .progress-bar {
-      width: 100%;
-      height: 14px;
-      background: #dbeafe;
-      border-radius: 999px;
-      overflow: hidden;
-      border: 1px solid #bfdbfe;
-    }
-
-    .progress-fill {
-      height: 100%;
-      width: 0%;
-      border-radius: 999px;
-      background: linear-gradient(90deg, #2563eb, #60a5fa, #c98a2e);
-      transition: width 0.35s ease;
-    }
-
-    .right-panels {
-      display: grid;
-      gap: 20px;
-    }
-
-    .panel-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-bottom: 16px;
-    }
-
-    .panel-head h3 {
-      font-size: 22px;
-    }
-
-    .panel-tag {
-      background: #eff6ff;
-      color: #1d4ed8;
-      border: 1px solid #bfdbfe;
-      padding: 7px 12px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 700;
+      padding: 40px;
     }
 
     .video-box {
       width: 100%;
-      aspect-ratio: 16 / 9;
-      border-radius: 18px;
+      max-width: 800px;
+      aspect-ratio: 16/9;
+      margin-top: 20px;
+      position: relative;
+      border-radius: 12px;
       overflow: hidden;
-      background: #0f172a;
-      border: 1px solid #1e293b;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 18px;
+      background: black;
     }
 
-    video {
+    /* FIXES CLICK ISSUE */
+    #videoOutput {
       width: 100%;
       height: 100%;
       object-fit: contain;
-      background: #000;
+      position: relative;
+      z-index: 2;
     }
 
     .video-placeholder {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       color: #cbd5e1;
-      font-size: 15px;
-      text-align: center;
-      padding: 20px;
-      line-height: 1.6;
+      pointer-events: none;
+      z-index: 1;
     }
 
-    .output-box {
-      min-height: 220px;
-      max-height: 420px;
-      overflow: auto;
-      white-space: pre-wrap;
-      line-height: 1.7;
-      padding: 18px;
-      border-radius: 18px;
-      background: #f8fafc;
-      border: 1px solid #e2e8f0;
-      color: #1e293b;
-      font-size: 15px;
-    }
-
-    .raw-wrap {
-      display: none;
-    }
-
-    .raw-box {
-      min-height: 180px;
-      max-height: 340px;
-      overflow: auto;
-      white-space: pre-wrap;
-      line-height: 1.7;
-      padding: 16px;
-      border-radius: 18px;
-      background: #0f172a;
-      border: 1px solid #1e293b;
-      color: #e2e8f0;
-      font-size: 14px;
-      font-family: Consolas, monospace;
-    }
-
-    .footer-note {
-      margin-top: 26px;
-      text-align: center;
-      color: rgba(255,255,255,0.88);
-      font-size: 14px;
-    }
-
-    @media (max-width: 980px) {
-      .hero,
-      .main-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .upload-card {
-        position: static;
-      }
-
-      .hero-card h2 {
-        font-size: 30px;
-      }
+    button {
+      margin-top: 15px;
+      padding: 10px 16px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
     }
   </style>
 </head>
+
 <body>
-  <div class="page">
-    <div class="topbar">
-      <div class="brand">
-        <img src="./lectra-logo.png" alt="Lectra logo" />
-      </div>
-      <div class="api-pill" id="apiLabel">API:</div>
-    </div>
 
-    <section class="hero">
-      <div class="hero-card">
-        <h2>Transform lecture recordings into polished study media</h2>
-        <p>
-          Upload your class video, process it through Lectra, and review the video preview
-          and transcript in one clean interface.
-        </p>
+  <h2>Lectra Upload</h2>
 
-        <div class="hero-badges">
-          <div class="hero-badge">Lecture processing</div>
-          <div class="hero-badge">AI polish support</div>
-          <div class="hero-badge">Video preview</div>
-          <div class="hero-badge">Transcript output</div>
-        </div>
-      </div>
+  <input type="file" id="fileInput" accept="video/*">
 
-      <div class="info-card">
-        <h3>Built for school use</h3>
-        <p>
-          Lectra gives your project a cleaner academic interface with a classroom-style layout,
-          video preview, transcript output, and a loading bar during processing.
-        </p>
-
-        <div class="mini-grid">
-          <div class="mini-box">
-            <strong>Preview</strong>
-            <span>Watch the uploaded lecture video</span>
-          </div>
-          <div class="mini-box">
-            <strong>Transcript</strong>
-            <span>Read the polished transcript output</span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="main-grid">
-      <div class="upload-card">
-        <h2 class="card-title">Upload Lecture Video</h2>
-        <p class="card-subtitle">
-          Drag and drop your lecture recording or click below to choose a file.
-        </p>
-
-        <div class="dropzone" id="dropzone">
-          <div class="dropzone-icon">🎓</div>
-          <h3>Select your lecture file</h3>
-          <p>Supports classroom videos, lecture captures, and study recordings.</p>
-          <input type="file" id="fileInput" accept="video/*" />
-          <div class="selected-file" id="selectedFile"></div>
-        </div>
-
-        <div class="controls">
-          <div class="toggle-row">
-            <div class="text">
-              <h4>Polish transcript</h4>
-              <p>Use AI polishing to improve readability and structure.</p>
-            </div>
-            <label class="switch">
-              <input type="checkbox" id="polishChk" checked />
-              <span class="slider"></span>
-            </label>
-          </div>
-
-          <div class="toggle-row">
-            <div class="text">
-              <h4>Show raw transcript</h4>
-              <p>Reveal the original transcript from the backend response.</p>
-            </div>
-            <label class="switch">
-              <input type="checkbox" id="showRawChk" />
-              <span class="slider"></span>
-            </label>
-          </div>
-        </div>
-
-        <div class="action-buttons">
-          <button id="uploadBtn" class="btn btn-primary">Upload and Process</button>
-          <button id="clearBtn" class="btn btn-secondary" type="button">Clear</button>
-        </div>
-
-        <div class="status-text" id="statusText">Waiting for a lecture upload.</div>
-
-        <div class="progress-wrap" id="progressWrap">
-          <div class="progress-bar">
-            <div class="progress-fill" id="progressFill"></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="right-panels">
-        <div class="panel-card">
-          <div class="panel-head">
-            <h3>Video Output</h3>
-            <span class="panel-tag">Preview</span>
-          </div>
-
-          <div class="video-box">
-            <div class="video-placeholder" id="videoPlaceholder">
-              Your uploaded lecture video will appear here.
-            </div>
-            <video id="videoOutput" controls style="display:none;"></video>
-          </div>
-
-          <div class="panel-head">
-            <h3>Transcript Output</h3>
-            <span class="panel-tag">Main Result</span>
-          </div>
-          <div id="output" class="output-box"></div>
-        </div>
-
-        <div class="panel-card raw-wrap" id="rawWrap">
-          <div class="panel-head">
-            <h3>Raw Transcript</h3>
-            <span class="panel-tag">Debug View</span>
-          </div>
-          <div id="rawOutput" class="raw-box"></div>
-        </div>
-      </div>
-    </section>
-
-    <div class="footer-note">
-      <strong>Lectra</strong> • Study. Refined.
+  <div class="video-box">
+    <video id="videoOutput" controls playsinline style="display:none;"></video>
+    <div class="video-placeholder" id="videoPlaceholder">
+      Upload a video to preview
     </div>
   </div>
 
+  <button id="clearBtn">Clear</button>
+
   <script>
-    const uploadBtn = document.getElementById("uploadBtn");
-    const clearBtn = document.getElementById("clearBtn");
     const fileInput = document.getElementById("fileInput");
-    const polishChk = document.getElementById("polishChk");
-    const showRawChk = document.getElementById("showRawChk");
-    const rawWrap = document.getElementById("rawWrap");
-    const rawOutputEl = document.getElementById("rawOutput");
-    const outputEl = document.getElementById("output");
-    const apiLabel = document.getElementById("apiLabel");
-    const dropzone = document.getElementById("dropzone");
-    const selectedFileEl = document.getElementById("selectedFile");
-    const statusText = document.getElementById("statusText");
-    const progressWrap = document.getElementById("progressWrap");
-    const progressFill = document.getElementById("progressFill");
     const videoOutput = document.getElementById("videoOutput");
     const videoPlaceholder = document.getElementById("videoPlaceholder");
+    const clearBtn = document.getElementById("clearBtn");
 
-    const API_BASE =
-      (location.hostname === "localhost" || location.hostname === "127.0.0.1")
-        ? "http://127.0.0.1:8000"
-        : "https://t2lecture-backend.onrender.com";
+    let currentVideoURL = null;
 
-    apiLabel.textContent = `API: ${API_BASE}`;
-
-    let progressTimer = null;
-
-    function startFakeProgress() {
-      progressWrap.style.display = "block";
-      progressFill.style.width = "8%";
-
-      let width = 8;
-      progressTimer = setInterval(() => {
-        if (width < 88) {
-          width += Math.random() * 10;
-          progressFill.style.width = Math.min(width, 88) + "%";
-        }
-      }, 500);
-    }
-
-    function finishProgress() {
-      if (progressTimer) clearInterval(progressTimer);
-      progressFill.style.width = "100%";
-      setTimeout(() => {
-        progressWrap.style.display = "none";
-        progressFill.style.width = "0%";
-      }, 700);
-    }
-
-    function resetProgress() {
-      if (progressTimer) clearInterval(progressTimer);
-      progressWrap.style.display = "none";
-      progressFill.style.width = "0%";
-    }
-
-    function updateSelectedFile() {
+    fileInput.addEventListener("change", () => {
       const file = fileInput.files[0];
-      if (!file) {
-        selectedFileEl.style.display = "none";
-        selectedFileEl.textContent = "";
+      if (!file) return;
+
+      // optional size check
+      if (file.size > 500 * 1024 * 1024) {
+        alert("File too large (max 500MB)");
         return;
       }
 
-      selectedFileEl.style.display = "block";
-      selectedFileEl.textContent = `Selected: ${file.name}`;
-    }
+      previewVideo(file);
+    });
 
     function previewVideo(file) {
       if (!file) return;
-      const url = URL.createObjectURL(file);
-      videoOutput.src = url;
-      videoOutput.style.display = "block";
-      videoPlaceholder.style.display = "none";
-    }
 
-    showRawChk.addEventListener("change", () => {
-      rawWrap.style.display = showRawChk.checked ? "block" : "none";
-    });
-
-    dropzone.addEventListener("click", () => {
-      fileInput.click();
-    });
-
-    fileInput.addEventListener("change", () => {
-      updateSelectedFile();
-      const file = fileInput.files[0];
-      if (file) previewVideo(file);
-    });
-
-    dropzone.addEventListener("dragover", (e) => {
-      e.preventDefault();
-      dropzone.classList.add("dragover");
-    });
-
-    dropzone.addEventListener("dragleave", () => {
-      dropzone.classList.remove("dragover");
-    });
-
-    dropzone.addEventListener("drop", (e) => {
-      e.preventDefault();
-      dropzone.classList.remove("dragover");
-
-      const files = e.dataTransfer.files;
-      if (files && files.length > 0) {
-        fileInput.files = files;
-        updateSelectedFile();
-        previewVideo(files[0]);
+      // CLEAN OLD URL (fix memory leak)
+      if (currentVideoURL) {
+        URL.revokeObjectURL(currentVideoURL);
       }
-    });
+
+      currentVideoURL = URL.createObjectURL(file);
+
+      videoOutput.src = currentVideoURL;
+      videoOutput.style.display = "block";
+
+      videoPlaceholder.style.display = "none";
+      videoPlaceholder.style.pointerEvents = "none";
+    }
 
     clearBtn.addEventListener("click", () => {
       fileInput.value = "";
-      updateSelectedFile();
-      outputEl.textContent = "";
-      rawOutputEl.textContent = "";
-      statusText.textContent = "Waiting for a lecture upload.";
-      resetProgress();
+
+      if (currentVideoURL) {
+        URL.revokeObjectURL(currentVideoURL);
+        currentVideoURL = null;
+      }
 
       videoOutput.pause();
-      videoOutput.removeAttribute("src");
+      videoOutput.src = "";
       videoOutput.load();
       videoOutput.style.display = "none";
-      videoPlaceholder.style.display = "block";
-    });
 
-    uploadBtn.addEventListener("click", async () => {
-      const file = fileInput.files[0];
-
-      if (!file) {
-        alert("Please choose a video file.");
-        return;
-      }
-
-      uploadBtn.disabled = true;
-      uploadBtn.textContent = "Processing...";
-      statusText.textContent = "Uploading and processing your lecture video...";
-      outputEl.textContent = "";
-      rawOutputEl.textContent = "";
-      startFakeProgress();
-
-      const formData = new FormData();
-      formData.append("file", file);
-
-      const url = `${API_BASE}/upload?polish=${polishChk.checked ? "true" : "false"}`;
-
-      try {
-        const res = await fetch(url, {
-          method: "POST",
-          body: formData
-        });
-
-        const text = await res.text();
-        let data = null;
-
-        try {
-          data = JSON.parse(text);
-        } catch {
-          data = null;
-        }
-
-        if (!res.ok) {
-          statusText.textContent = `Error (${res.status}): ${res.statusText}`;
-          outputEl.textContent = data ? JSON.stringify(data, null, 2) : text;
-          finishProgress();
-          return;
-        }
-
-        if (data?.error) {
-          statusText.textContent = "Processing finished with a backend message.";
-          outputEl.textContent = JSON.stringify(data, null, 2);
-          finishProgress();
-          return;
-        }
-
-        statusText.textContent = `Done. Language: ${data.language || "unknown"} | Polish: ${polishChk.checked ? "enabled" : "disabled"}`;
-        outputEl.textContent = data.text || "(empty transcript)";
-        rawOutputEl.textContent = data.raw_text || "";
-        finishProgress();
-      } catch (e) {
-        statusText.textContent = "Failed to reach backend. Is it running?";
-        outputEl.textContent = String(e);
-        finishProgress();
-      } finally {
-        uploadBtn.disabled = false;
-        uploadBtn.textContent = "Upload and Process";
-      }
+      videoPlaceholder.style.display = "flex";
+      videoPlaceholder.style.pointerEvents = "auto";
     });
   </script>
+
 </body>
+
 </html>
